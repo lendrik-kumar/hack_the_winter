@@ -44,10 +44,3 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0, isExpanded, on
 }
 
 export default FeatureCard
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-export default FeatureCard

@@ -15,9 +15,6 @@ function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "How it works", href: "#workflow" },
-    { name: "Pricing", href: "#pricing" },
   ];
 
   return (
