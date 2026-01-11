@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import BackButton from "../components/BackButton";
+import { ArrowLeft } from "lucide-react";
 import CardGrid from "../components/cards/CardGrid";
 
 export default function Report() {
@@ -23,7 +23,7 @@ export default function Report() {
   const [brdUrl, setBrdUrl] = useState(null);
   const [strategyMarkdown, setStrategyMarkdown] = useState(null);
 
-  // Add CSS for animations and card styling
+  // Add CSS for animations
   React.useEffect(() => {
     const style = document.createElement("style");
     style.textContent = `
@@ -31,15 +31,8 @@ export default function Report() {
         from { opacity: 0; }
         to { opacity: 1; }
       }
-      
       .log-item {
-        animation: fadeIn 0.3s ease-in;
-      }
-      
-      .output-text {
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-size: 13px;
-        line-height: 1.6;
+        animation: fadeIn 0.3s ease-out;
       }
     `;
     document.head.appendChild(style);
@@ -228,105 +221,6 @@ export default function Report() {
     setRunning(true);
   }
 
-  /* --------------------
-     Small inline SVG icon components for action buttons
-     -------------------- */
-  const IconWrapper = ({ children, title }) => (
-    <button
-      className="bg-transparent border-none cursor-pointer p-0 flex items-center text-inherit transition-colors hover:text-[#1d9bf0]"
-      title={title}
-      aria-label={title}
-      type="button"
-    >
-      {children}
-    </button>
-  );
-
-  const HeartIcon = ({ filled = false }) => (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      fill={filled ? "#e0245e" : "none"}
-      stroke={filled ? "#e0245e" : "currentColor"}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M20.8 4.6c-1.9-1.8-5-1.7-6.9.2l-.9.9-.9-.9C10.2 2.9 7.1 2.8 5.2 4.6 2.9 6.8 3 10.6 5.4 13.1L12 19.6l6.6-6.5c2.4-2.4 2.5-6.2.2-8.5z" />
-    </svg>
-  );
-
-  const CommentIcon = () => (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-
-  const ShareIcon = () => (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
-      <polyline points="16 6 12 2 8 6" />
-      <line x1="12" y1="2" x2="12" y2="15" />
-    </svg>
-  );
-
-  const BookmarkIcon = () => (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-
-  const RetweetIcon = () => (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <polyline points="23 7 23 1 17 1" />
-      <path d="M20 8v6a3 3 0 0 1-3 3H7" />
-      <polyline points="1 17 1 23 7 23" />
-      <path d="M4 16v-6a3 3 0 0 1 3-3h10" />
-    </svg>
-  );
-
   function goToResearch() {
     if (!researchData) return;
     try {
@@ -341,78 +235,132 @@ export default function Report() {
   }
 
   return (
-    <div
-      className="w-full"
-      style={{ background: "#FFFFFF", minHeight: "100vh" }}
-    >
-      <BackButton />
-
-      <div className="flex flex-col lg:flex-row w-full min-h-screen">
-        {/* Left Section 70% */}
-        <div className="lg:w-[70%] w-full p-6 space-y-8">
-          {/* Campaign Plan - Animated Card */}
-          <div className="campaign-card-wrapper">
-            <div className="campaign-card">
-              <div className="campaign-card__cometOuter">
-                <div className="campaign-card__comet"></div>
-                <div className="campaign-card__comet campaign-card__comet--second"></div>
-              </div>
-              <div className="campaign-card__circle"></div>
-              <div className="campaign-card__smallCircle"></div>
-              <div className="campaign-card__orangeShine"></div>
-              <div className="campaign-card__greenShine"></div>
-
-              <div className="campaign-card__title">Campaign Plan</div>
-
-              {plannerData ? (
-                <div className="campaign-card__content">
-                  <div className="campaign-card__field">
-                    <div className="campaign-card__field-label">Goal</div>
-                    <div className="campaign-card__field-value">
-                      {plannerData.goal || "—"}
-                    </div>
-                  </div>
-                  <div className="campaign-card__field">
-                    <div className="campaign-card__field-label">Topic</div>
-                    <div className="campaign-card__field-value">
-                      {plannerData.topic || "—"}
-                    </div>
-                  </div>
-                  <div className="campaign-card__field">
-                    <div className="campaign-card__field-label">Audience</div>
-                    <div className="campaign-card__field-value">
-                      {plannerData.target_audience || "—"}
-                    </div>
-                  </div>
-                  <div className="campaign-card__field">
-                    <div className="campaign-card__field-label">Date</div>
-                    <div className="campaign-card__field-value">
-                      {plannerData.campaign_date
-                        ? new Date(
-                            plannerData.campaign_date
-                          ).toLocaleDateString()
-                        : "TBD"}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="campaign-card__content">
-                  <div
-                    style={{
-                      textAlign: "center",
-                      opacity: 0.6,
-                      fontStyle: "italic",
-                    }}
-                  >
-                    Waiting for Campaign Plan...
-                  </div>
-                </div>
-              )}
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
+      {/* Subtle Background Decoration */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gray-800/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gray-800/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+      
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800 shadow-lg shadow-black/20">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Left: Back + Logo */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-400" />
+              <span className="text-sm font-medium text-gray-400 hidden sm:inline">Back</span>
+            </button>
+            <div className="h-6 w-px bg-gray-700" />
+            <a href="/" className="font-bold text-xl text-white hover:text-gray-300 transition-colors">
+              CampaignAI
+            </a>
           </div>
 
-          {/* Cards 2x2 */}
-          <div className="mt-12">
+          {/* Center: Status */}
+          <div className="hidden md:flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${running ? 'bg-green-500 animate-pulse' : 'bg-gray-300'}`} />
+            <span className="text-sm text-gray-600 font-medium">
+              {running ? 'Campaign Running...' : 'Ready'}
+            </span>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/prompt")}
+              className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              New Campaign
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="px-4 py-2 text-sm font-semibold text-gray-900 bg-white hover:bg-gray-200 rounded-lg transition-colors shadow-sm"
+            >
+              Home
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex flex-col lg:flex-row w-full min-h-screen relative z-10 pt-16">
+        {/* Left Section - 70% */}
+        <div className="lg:w-[70%] w-full p-6 pt-8 space-y-8">
+          {/* Page Title */}
+          <div className="mb-10">
+            <div className="inline-block px-3 py-1 bg-gray-800 text-gray-400 text-xs font-semibold rounded-full mb-3 border border-gray-700">
+              CAMPAIGN MANAGER
+            </div>
+            <h1 className="text-4xl font-bold text-white" style={{ fontFamily: 'Urbanist, sans-serif' }}>
+              Campaign Dashboard
+            </h1>
+            <p className="text-gray-400 mt-2 text-lg">Monitor your campaign generation progress in real-time</p>
+          </div>
+
+          {/* Campaign Plan Card */}
+          <div className="bg-gray-900 rounded-2xl border border-gray-800 shadow-lg shadow-black/20 p-8 hover:shadow-xl transition-shadow">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center">
+                  <span className="text-gray-300 text-lg">📋</span>
+                </div>
+                <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Urbanist, sans-serif' }}>
+                  Campaign Plan
+                </h2>
+              </div>
+              {plannerData && (
+                <span className="px-4 py-1.5 bg-green-900/50 text-green-400 rounded-full text-sm font-semibold border border-green-800">
+                  ✓ Generated
+                </span>
+              )}
+            </div>
+
+            {plannerData ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gray-800 rounded-xl p-4">
+                  <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1">Goal</div>
+                  <div className="text-white font-medium">{plannerData.goal || "—"}</div>
+                </div>
+                <div className="bg-gray-800 rounded-xl p-4">
+                  <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1">Topic</div>
+                  <div className="text-white font-medium">{plannerData.topic || "—"}</div>
+                </div>
+                <div className="bg-gray-800 rounded-xl p-4">
+                  <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1">Target Audience</div>
+                  <div className="text-white font-medium">{plannerData.target_audience || "—"}</div>
+                </div>
+                <div className="bg-gray-800 rounded-xl p-4">
+                  <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1">Campaign Date</div>
+                  <div className="text-white font-medium">
+                    {plannerData.campaign_date
+                      ? new Date(plannerData.campaign_date).toLocaleDateString()
+                      : "TBD"}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gray-800 rounded-xl p-8 text-center">
+                <p className="text-gray-400">Waiting for Campaign Plan...</p>
+                <p className="text-gray-500 text-sm mt-1">The AI is analyzing your request</p>
+              </div>
+            )}
+          </div>
+
+          {/* Campaign Tools */}
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center">
+                <span className="text-gray-300 text-lg">🛠️</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white" style={{ fontFamily: 'Urbanist, sans-serif' }}>
+                  Campaign Tools
+                </h3>
+                <p className="text-gray-400 text-sm">Access your campaign assets and tools</p>
+              </div>
+            </div>
             <CardGrid
               brdUrl={brdUrl}
               strategyMarkdown={strategyMarkdown}
@@ -423,76 +371,74 @@ export default function Report() {
           </div>
 
           {/* Research Button */}
-          <div className="pt-2 flex justify-center">
+          <div className="flex justify-center pt-6 pb-4">
             <button
               onClick={goToResearch}
               disabled={!researchData}
-              className={`px-8 py-4 rounded-lg font-semibold transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed ${
-                researchData ? "animate-pulse-subtle hover:scale-105" : ""
+              className={`px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 ${
+                researchData
+                  ? "bg-white text-gray-900 hover:bg-gray-200 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-0.5"
+                  : "bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700"
               }`}
-              style={{
-                background: researchData
-                  ? "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)"
-                  : "#d1d5db",
-              }}
             >
-              {researchData
-                ? "Get Research Analytics"
-                : "Waiting for Research Agent..."}
+              {researchData ? "📊 View Research Analytics" : "⏳ Waiting for Research Agent..."}
             </button>
           </div>
         </div>
 
-        {/* Right Section 30% */}
-        <div className="lg:w-[30%] w-full p-6 space-y-6 bg-gray-50">
+        {/* Right Section - 30% */}
+        <div className="lg:w-[30%] w-full p-6 pt-8 space-y-6 bg-gradient-to-b from-gray-900 to-gray-950 border-l border-gray-800">
           {/* Activity Log */}
-          <div
-            className="rounded-xl p-5 border border-gray-200 shadow-md"
-            style={{
-              background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
-            }}
-          >
-            <h2
-              className="mt-0 mb-4 text-gray-800 text-xl"
-              style={{ fontFamily: "Urbanist, sans-serif", fontWeight: 800 }}
+          <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-5 py-4 border-b border-gray-800 bg-gray-800/50">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">📝</span>
+                <h2 className="font-bold text-white" style={{ fontFamily: 'Urbanist, sans-serif' }}>
+                  Activity Log
+                </h2>
+              </div>
+            </div>
+            <div
+              className="max-h-80 overflow-y-auto p-4 space-y-2"
+              ref={outputRef}
             >
-              Activity Log
-            </h2>
-            <div className="bg-white rounded-lg border border-gray-200">
-              <div
-                className="max-h-[400px] overflow-y-auto p-4 font-mono text-sm leading-relaxed text-black"
-                ref={outputRef}
-              >
-                {logNodes.map((n) => (
+              {logNodes.length === 0 ? (
+                <p className="text-gray-500 text-sm text-center py-4">No activity yet</p>
+              ) : (
+                logNodes.map((n) => (
                   <div
                     key={n.id}
-                    className={`mb-3 p-2 bg-gray-50 rounded border-l-[3px] text-black ${
+                    className={`log-item p-3 rounded-lg text-sm ${
                       n.isSeparator
-                        ? "border-l-orange-400 bg-orange-50 my-4"
-                        : "border-l-purple-400"
+                        ? "bg-amber-900/30 border-l-4 border-amber-500 text-amber-300"
+                        : n.html.includes("ERROR")
+                        ? "bg-red-900/30 border-l-4 border-red-500 text-red-300"
+                        : n.html.includes("STATUS")
+                        ? "bg-blue-900/30 border-l-4 border-blue-500 text-blue-300"
+                        : "bg-gray-800 border-l-4 border-gray-600 text-gray-300"
                     }`}
                     dangerouslySetInnerHTML={{ __html: n.html }}
                   />
-                ))}
-              </div>
+                ))
+              )}
             </div>
           </div>
 
-          {/* Live State */}
-          <div
-            className="rounded-xl p-5 border border-gray-200 shadow-md"
-            style={{
-              background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
-            }}
-          >
-            <h2
-              className="mt-0 mb-4 text-gray-800 text-xl"
-              style={{ fontFamily: "Urbanist, sans-serif", fontWeight: 800 }}
-            >
-              Live Campaign State (JSON)
-            </h2>
-            <pre className="bg-white border border-gray-200 rounded-lg p-4 max-h-[400px] overflow-y-auto font-mono text-[13px] text-gray-700 whitespace-pre-wrap break-words">
-              {JSON.stringify(jsonState, null, 2)}
+          {/* Live State JSON */}
+          <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-5 py-4 border-b border-gray-800 bg-gray-800/50 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚡</span>
+                <h2 className="font-bold text-white" style={{ fontFamily: 'Urbanist, sans-serif' }}>
+                  Live State
+                </h2>
+              </div>
+              <span className="text-xs text-gray-400 font-mono bg-gray-700 px-2 py-0.5 rounded">JSON</span>
+            </div>
+            <pre className="p-4 max-h-64 overflow-auto text-xs font-mono text-gray-300 bg-gray-800/50">
+              {Object.keys(jsonState).length > 0 
+                ? JSON.stringify(jsonState, null, 2)
+                : "{\n  // Waiting for data...\n}"}
             </pre>
           </div>
         </div>

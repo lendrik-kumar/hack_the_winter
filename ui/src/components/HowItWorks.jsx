@@ -6,7 +6,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Button from "./Button";
 
 const HowItWorks = () => {
   const navigate = useNavigate();
@@ -43,14 +42,17 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-neutral-950">
+    <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
+          <div className="inline-block px-3 py-1 bg-gray-800 text-gray-400 text-xs font-semibold rounded-full mb-4 border border-gray-700">
+            HOW IT WORKS
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Urbanist, sans-serif' }}>
             How It Works
           </h2>
-          <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             From idea to launch in just 4 simple steps
           </p>
         </div>
@@ -62,29 +64,29 @@ const HowItWorks = () => {
             return (
               <div key={index} className="relative">
                 {/* Step Card */}
-                <div className="h-full p-8 rounded-lg bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-primary-500 dark:hover:border-primary-500 transition-smooth hover:shadow-md">
+                <div className="h-full p-8 rounded-2xl bg-gray-900 border-2 border-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-1">
                   {/* Step Number */}
-                  <div className="text-sm font-bold text-primary-600 dark:text-primary-400 mb-4">
+                  <div className="text-5xl font-black text-gray-700 mb-4">
                     {step.number}
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-6 inline-flex p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                    <Icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  <div className="mb-6 inline-flex p-3 bg-gray-800 rounded-xl">
+                    <Icon className="w-8 h-8 text-gray-300" />
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">
+                  <h3 className="text-xl font-bold text-white mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     {step.description}
                   </p>
                 </div>
 
                 {/* Connector Line */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary-500 to-transparent" />
+                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-gray-600 to-transparent" />
                 )}
               </div>
             );
@@ -92,23 +94,21 @@ const HowItWorks = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-20 pt-16 border-t border-neutral-200 dark:border-neutral-800">
-          <h3 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-4">
+        <div className="text-center mt-20 pt-16 border-t border-gray-800">
+          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Urbanist, sans-serif' }}>
             Ready to Launch?
           </h3>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl mx-auto">
+          <p className="text-gray-400 mb-8 max-w-xl mx-auto">
             Get started with CampaignAI today and transform your startup vision
             into reality.
           </p>
-          <Button
-            variant="primary"
-            size="lg"
+          <button
             onClick={() => navigate("/prompt")}
-            className="gap-2"
+            className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold text-gray-900 bg-white hover:bg-gray-200 rounded-2xl transition-all duration-300 shadow-lg shadow-black/20 hover:shadow-xl hover:-translate-y-0.5"
           >
             Start Building
             <ArrowRight className="w-5 h-5" />
-          </Button>
+          </button>
         </div>
       </div>
     </section>
