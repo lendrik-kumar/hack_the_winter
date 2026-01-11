@@ -1,3 +1,5 @@
+
+export default LandingPage;
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
@@ -6,39 +8,49 @@ import Workflow from "../components/HowItWorks";
 
 function LandingPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950">
+    <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+      {/* Skip link for accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-primary-600 text-white rounded-lg shadow-lg"
       >
         Skip to main content
       </a>
 
-      <main className="relative">
+      {/* Navbar with subtle backdrop */}
+      <header className="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-neutral-950/80 border-b border-neutral-200 dark:border-neutral-800">
         <Navbar />
-        <main id="main-content">
-          <section className="min-h-screen flex items-center">
-            <div className="w-full">
-              <Hero />
-            </div>
-          </section>
+      </header>
 
-          <section className="min-h-screen flex items-center py-20 bg-neutral-50 dark:bg-neutral-900/50">
-            <div className="w-full">
-              <Features />
-            </div>
-          </section>
+      <main id="main-content">
+        {/* HERO */}
+        <section className="relative min-h-[90vh] flex items-center">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary-50/40 to-transparent dark:from-primary-900/10 pointer-events-none" />
+          <div className="relative w-full px-6">
+            <Hero />
+          </div>
+        </section>
 
-          <section className="min-h-screen flex items-center py-20">
-            <div className="w-full">
-              <Workflow />
-            </div>
-          </section>
-        </main>
+        {/* FEATURES */}
+        <section className="relative py-28 bg-neutral-50 dark:bg-neutral-900/50">
+          <div className="max-w-7xl mx-auto px-6">
+            <Features />
+          </div>
+        </section>
+
+        {/* WORKFLOW */}
+        <section className="relative py-28">
+          <div className="max-w-7xl mx-auto px-6">
+            <Workflow />
+          </div>
+        </section>
       </main>
-      <Footer />
+
+      {/* FOOTER */}
+      <footer className="border-t border-neutral-200 dark:border-neutral-800">
+        <Footer />
+      </footer>
     </div>
   );
 }
 
-export default LandingPage;
