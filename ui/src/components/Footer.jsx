@@ -19,18 +19,18 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800 py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-gray-950 text-gray-400 border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
             <a
               href="/"
-              className="text-xl font-bold text-primary-600 dark:text-primary-400 mb-4 inline-block hover:text-primary-700 dark:hover:text-primary-300 transition-smooth"
+              className="text-xl font-bold text-white mb-4 inline-block hover:text-gray-300 transition-colors"
             >
               CampaignAI
             </a>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <p className="text-sm text-gray-500 leading-relaxed">
               Build, launch, and scale your startup with AI-powered assistance.
             </p>
           </div>
@@ -38,7 +38,7 @@ const Footer = () => {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-neutral-900 dark:text-neutral-100 font-semibold mb-4 capitalize text-sm">
+              <h4 className="text-white font-semibold mb-4 capitalize text-sm">
                 {category}
               </h4>
               <ul className="space-y-2">
@@ -46,7 +46,7 @@ const Footer = () => {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-smooth text-sm"
+                      className="text-gray-500 hover:text-white transition-colors text-sm"
                     >
                       {link.name}
                     </a>
@@ -58,8 +58,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-neutral-200 dark:border-neutral-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
-          <p className="text-neutral-600 dark:text-neutral-400">
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+          <p className="text-gray-500">
             © {currentYear} CampaignAI. All rights reserved.
           </p>
         </div>
