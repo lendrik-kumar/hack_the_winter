@@ -79,50 +79,40 @@ function Card({
       role="button"
       tabIndex={isReady ? 0 : -1}
       className={`
-        relative rounded-lg p-8
-        border border-primary-200 dark:border-primary-800
-        transition-smooth
-        min-h-[240px]
+        relative rounded-2xl p-8
+        border-2 border-gray-700
+        transition-all duration-300 ease-out
+        min-h-[260px]
         flex flex-col justify-between
         group
         overflow-hidden
-        ${isReady ? "cursor-pointer" : "cursor-not-allowed opacity-60"}
-        ${isHovered && isReady ? "shadow-lg scale-105" : "shadow-md"}
-        bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20
+        ${isReady ? "cursor-pointer hover:border-gray-500" : "cursor-not-allowed opacity-50"}
+        ${isHovered && isReady ? "shadow-xl shadow-black/30 scale-[1.02] -translate-y-1" : "shadow-lg shadow-black/20"}
+        bg-gray-800
       `}
     >
       {isHovered && isReady && (
-        <div className="absolute inset-0 z-20 opacity-30 pointer-events-none">
+        <div className="absolute inset-0 z-20 opacity-20 pointer-events-none">
           <div
             aria-hidden
-            className="w-full h-full rounded-lg"
-            style={{
-              background: `radial-gradient(420px 220px at 30% 50%, ${hexToRgba(
-                colors[0],
-                0.15
-              )}, transparent 30%), radial-gradient(420px 220px at 90% 80%, ${hexToRgba(
-                colors[1],
-                0.12
-              )}, transparent 25%)`,
-              filter: "blur(36px)",
-            }}
+            className="w-full h-full rounded-lg bg-gradient-to-br from-gray-700 to-gray-800"
           />
         </div>
       )}
 
       <div className="relative z-10">
-        <div className="text-4xl font-bold mb-2 text-primary-700 dark:text-primary-300">
+        <div className="text-5xl font-black mb-3 text-gray-600">
           {String(id).padStart(2, "0")}
         </div>
-        <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-3 leading-tight">
+        <h3 className="text-xl font-bold text-white mb-3 leading-tight">
           {title}
         </h3>
-        <p className="text-neutral-700 dark:text-neutral-300 text-sm">
+        <p className="text-gray-400 text-sm leading-relaxed">
           {description}
         </p>
         {!isReady && (
-          <p className="mt-3 text-xs font-semibold text-primary-600 dark:text-primary-400">
-            Waiting for backend...
+          <p className="mt-4 text-xs font-semibold text-gray-500 animate-pulse">
+            ⏳ Waiting for backend...
           </p>
         )}
       </div>
