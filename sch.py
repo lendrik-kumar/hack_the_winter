@@ -71,11 +71,49 @@ log_analysis_chain = log_analysis_prompt | llm | log_analysis_parser
 print("--- ✅ Log Analysis Chain Created ---")
 
 # --- 5. Calendly API Function ---
+def get_available_times(start_time: str, end_time: str) -> Optional[list]:
+    """
+    Fetches available time slots from Calendly for the given date range.
+    """
+    headers = {
+        "Authorization": f"Bearer {CALENDLY_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    # Get the event type URI from the URL
+    event_type_uri = CALENDLY_EVENT_TYPE_URL
+    
+    try:
+        # Calendly API to get available times
+        params = {
+            "event_type": event_type_uri,
+            "start_time": start_time,
+            "end_time": end_time
+        }
+        
+        response = requests.get(
+            "https://api.calendly.com/event_type_available_times",
+            headers=headers,
+            params=params
+        )
+        response.raise_for_status()
+        data = response.json()
+        
+        available_times = data.get("collection", [])
+        return available_times if available_times else None
+        
+    except requests.exceptions.RequestException as e:
+        print(f"--- ❌ Error fetching available times: {e} ---")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Response: {e.response.text}")
+        return None
+
+
 def schedule_calendly_meeting(name: str, email: str, start_time: str) -> Dict[str, Any]:
     """
-    Schedules a meeting in Calendly.
-    NOTE: This is a simplified example. Calendly's API is complex.
-    This function *finds an available slot* near the requested time and books it.
+    Schedules a meeting in Calendly by:
+    1. Finding available slots near the requested time
+    2. Creating a scheduling link for the invitee
     """
     print(f"--- 📅 Attempting to book Calendly meeting for {email} around {start_time} ---")
     
@@ -84,54 +122,108 @@ def schedule_calendly_meeting(name: str, email: str, start_time: str) -> Dict[st
         "Content-Type": "application/json"
     }
     
-    # This is a simplified flow. A real app would first check for available slots.
-    # For this demo, we'll try to book it directly.
-    # We'll create an ISO-8601 end time 30 minutes after the start time
+    # Parse and validate the requested time
     try:
-        start_time_dt = datetime.fromisoformat(start_time)
-        end_time_dt = start_time_dt + timedelta(minutes=30)
-        end_time = end_time_dt.isoformat()
+        requested_time = datetime.fromisoformat(start_time)
+        # Search for slots within a 3-hour window around the requested time
+        search_start = requested_time - timedelta(hours=1)
+        search_end = requested_time + timedelta(hours=2)
     except Exception:
-        # Fallback if LLM gives a bad time
-        start_time_dt = datetime.now() + timedelta(days=1) # Book for tomorrow
-        start_time = start_time_dt.isoformat()
-        end_time = (start_time_dt + timedelta(minutes=30)).isoformat()
-
-    booking_payload = {
-        "event_type": CALENDLY_EVENT_TYPE_URL,
-        "invitee": {
-            "name": name,
-            "email": email
-        },
-        "start_time": start_time,
-        "end_time": end_time,
-    }
-
+        # Fallback if LLM gives a bad time - schedule for tomorrow
+        requested_time = datetime.now() + timedelta(days=1)
+        search_start = requested_time
+        search_end = requested_time + timedelta(hours=3)
+    
+    # Format times for Calendly API (ISO 8601 with timezone)
+    search_start_iso = search_start.isoformat()
+    search_end_iso = search_end.isoformat()
+    
+    print(f"--- 🔍 Searching for available slots between {search_start_iso} and {search_end_iso} ---")
+    
+    # Step 1: Get available times
+    available_times = get_available_times(search_start_iso, search_end_iso)
+    
+    if not available_times:
+        print("--- ⚠️ No available times found. Creating a scheduling link instead. ---")
+        # Fallback: Create a one-off scheduling link
+        try:
+            scheduling_link_payload = {
+                "max_event_count": 1,
+                "owner": CALENDLY_EVENT_TYPE_URL.split('/event_types/')[0].replace('/event_types', '/users'),
+                "owner_type": "EventType"
+            }
+            
+            response = requests.post(
+                "https://api.calendly.com/scheduling_links",
+                headers=headers,
+                json=scheduling_link_payload
+            )
+            response.raise_for_status()
+            link_data = response.json()
+            
+            scheduling_url = link_data.get("resource", {}).get("booking_url", "")
+            print(f"--- ✅ Created scheduling link: {scheduling_url} ---")
+            
+            return {
+                "status": "link_created",
+                "details": {
+                    "scheduling_url": scheduling_url,
+                    "message": f"Please share this link with {name} ({email}) to complete booking."
+                }
+            }
+            
+        except requests.exceptions.RequestException as e:
+            print(f"--- ❌ CALENDLY ERROR creating scheduling link: {e} ---")
+            if hasattr(e, 'response') and e.response is not None:
+                print(f"Response: {e.response.text}")
+            return {"status": "failed", "error": str(e)}
+    
+    # Step 2: Book the first available slot
     try:
-        # This is a mock API call for demonstration.
-        # The actual Calendly booking API is at 'https://api.calendly.com/scheduled_events'
-        # response = requests.post("https://api.calendly.com/scheduled_events", headers=headers, json=booking_payload)
-        # response.raise_for_status()
+        first_slot = available_times[0]
+        slot_start = first_slot.get("start_time")
         
-        # --- MOCKING THE CALL ---
-        print("--- ⚠️ CALENDLY MOCK: Simulating successful booking. ---")
-        # In a real app, you would uncomment the 'requests.post' above.
-        # We will simulate the response.
-        mock_response = {
-            "resource": {
-                "uri": "https://api.calendly.com/scheduled_events/GBGBD...EXAMPLE",
-                "name": "Meeting with " + name,
-                "start_time": start_time,
-                "end_time": end_time
+        print(f"--- 📅 Booking slot at {slot_start} ---")
+        
+        # Create invitee booking
+        invitee_payload = {
+            "event": {
+                "event_type": CALENDLY_EVENT_TYPE_URL,
+                "start_time": slot_start
+            },
+            "invitee": {
+                "email": email,
+                "name": name
             }
         }
-        # --- END MOCK ---
         
+        response = requests.post(
+            "https://api.calendly.com/scheduled_events",
+            headers=headers,
+            json=invitee_payload
+        )
+        response.raise_for_status()
+        booking_data = response.json()
+        
+        scheduled_event = booking_data.get("resource", {})
         print("--- ✅ Calendly meeting scheduled successfully. ---")
-        return {"status": "scheduled", "details": mock_response}
+        print(f"Event URI: {scheduled_event.get('uri', 'N/A')}")
+        
+        return {
+            "status": "scheduled",
+            "details": {
+                "event_uri": scheduled_event.get("uri"),
+                "start_time": scheduled_event.get("start_time"),
+                "end_time": scheduled_event.get("end_time"),
+                "invitee_email": email,
+                "invitee_name": name
+            }
+        }
     
-    except Exception as e:
-        print(f"--- ❌ CALENDLY ERROR: {e} ---")
+    except requests.exceptions.RequestException as e:
+        print(f"--- ❌ CALENDLY ERROR scheduling meeting: {e} ---")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Response: {e.response.text}")
         return {"status": "failed", "error": str(e)}
 
 # --- 6. Create the FastAPI App ---
